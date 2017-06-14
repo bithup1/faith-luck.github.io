@@ -3,16 +3,7 @@
 
 >下面时一段代码
 
-<pre><code>
-#include <iostream>
-using namespace std;
 
-int main()
-{
-  cout << "hello world";
-  return 0;
-}
-</code></pre>
 ***
 
 ```c++
