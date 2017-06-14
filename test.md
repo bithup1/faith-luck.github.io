@@ -14,6 +14,17 @@ int main()
 }
 </code></pre>
 
+```c++
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << "hello world";
+  return 0;
+}
+```
+
 ***
 标题|A|B|C
 -|-|-|-
