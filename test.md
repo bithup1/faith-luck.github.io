@@ -13,6 +13,7 @@ int main()
   return 0;
 }
 </code></pre>
+***
 
 ```c++
 #include <iostream>
