@@ -172,6 +172,15 @@ fp = &sum; //将sum函数地址赋值给fp；
 ```
 >对于普通的函数，&符可以省略；c++中函数指针可以指向类成员函数；
 * 指向指针的指针
+```c
+//指针可以有多级
+int a = 100;
+int *p1 = &a;
+int **p2 = &p1;
+int ***p3 = &p2;
+//多级指针使用
+int b = **p2;
+```
 
 * 与指针有关的定义
 >用变量a给出下面定义</br>
@@ -203,13 +212,27 @@ C语言中的引用：用&声明，声明引用有什么用；与指针有什么
 ***
 
 ### 第六章   宏定义与条件编译 ###
-\#include 预处理指令 #define宏   #if #ifdef #ifndef #endif条件编译
+* \#define宏
+>字符串和表达式替换，注意表达式外面使用括号；</br>
+>带参宏与普通函数区别
+>带参宏的好处，普通函数要开辟内存空间，宏参数不必指明数据类型；
+* \#include 预处理指令  
+* \#ifndef #define #endif 防止头文件被重复包含
+```c
+//头文件名为abc.h
+#ifndef _ABC_H
+#define _ABC_H
+...
+#endif
 
-变量作用域
+```
+* \#if #ifdef #else #endif条件编译
 
-编译的各个阶段完成什么工作
+* 变量作用域
 
-手动编写makefile，CMake的使用
+* 编译的各个阶段完成什么工作
+
+* 手动编写makefile，CMake的使用
 ```
 /* filename:add.h */
 extern int add(int i, int j);
