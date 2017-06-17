@@ -233,7 +233,7 @@ C语言中的引用：用&声明，声明引用有什么用；与指针有什么
 * 编译的各个阶段完成什么工作
 
 * 手动编写makefile，CMake的使用
-```
+```c
 /* filename:add.h */
 extern int add(int i, int j);
 
@@ -255,8 +255,8 @@ main()
   printf("the sum of a+b is %d", add(a + b));
 };
 
-怎样为上述三个文件产生makefile呢？如下：
--------------------------
+//怎样为上述三个文件产生makefile呢？如下：
+/**-------------------------
 test : main.o add.o
 gcc main.o add.o -o test
  
@@ -265,8 +265,8 @@ gcc -c main.c -o main.o
  
 add.o : add.c add.h
 gcc -c add.c -o add.o 
------------------------
-(注意分割符为TAB键）
+**/-----------------------
+//(注意分割符为TAB键）
 ```
 多文件编译https://my.oschina.net/u/3160411/blog/edit/draft/630161
 动态链接与静态链接
