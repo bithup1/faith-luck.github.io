@@ -274,29 +274,64 @@ gcc -c add.c -o add.o
 ***
 
 ### 第七章   标准库函数使用举例 ###
-文本背景色（conio.h）
+* 标准输入输出stdio.h
+>FILE文件结构体
+>fopen()打开文件；fclose()关闭文件
+>fgetc();fputc();getc();putc();
+>scanf();fscanf();
 
-一些库函数：
+* 字符函数ctype.h
+>isalpha()判断是否是字符
+>issupper();islower()判断大小写
+>isdigit();判断是否是数字
 
-  字符：getch() putch()  scanf()
+* 字符串函数库 string.h
+>strlen()返回字符串长度
+>strcpy()；strncpy()复制字符串
+>strcat();strncat()
+>strcmp();strncmp()字符串比较
+>strchr();strrchr()字符串搜索
 
-  颜色：textbackground()背景色  textcolor()文本色 cprintf()
+* 数学函数math.h
+>sqrt();平方
+>fabs();绝对值
+>pow() 幂,double类型
+>fmod();double类型
+>sin();exp();log();指数、对数、三角函数
 
-　坐标：gotoxy()定位 clrscr()清屏
+* 其他
+>rand();srand();随机数
+>calloc();realloc();malloc();free();引入 stdlib.h
+>exit();abort();正常和非正常退出；
 
-  数学函数：sqrt()　　
+* 坐标与颜色（conio.h）
+>颜色：textbackground()背景色  textcolor()文本色 cprintf()
+>坐标：gotoxy()定位 clrscr()清屏
 
-　时间函数：time.h   time() ctime() asctime() localtime() gmtime() clock()
 
-画图（graphics.h）：circle（） putpixel()画点 ellipse（）椭圆
+* 时间函数：time.h   
+>time() ctime() asctime() 
+>localtime() gmtime() clock()
 
-在程序中使用malloc()和free()函数需要引入<stdlib.h>头文件，如果不引入，仍可以通过编译但是会提示warning: incompatible implicit declaration of built-in function ‘malloc’
+* 图形绘制 graphics.h
+>circle（） putpixel()画点 
+>ellipse（）椭圆
 
-string.h strlen() 计算字符串长度strcpy() 复制一个字符串到另一个字符串strncpy() 
+ 
 ***
 
 ### 第八章   常见数据结构 ###
-创建链表
+>线性表顺序存储与数组有什么区别
+>单链表、
+>双向链表
+>循环链表
+>二叉树、遍历
+>栈
+>队列
+>串
+>二维数组与矩阵
+>哈希表
+>图
 
 创建链表有多种方式，可以分为带头节点和不带头节点：http://www.cnblogs.com/plxx/p/3388098.html
 
@@ -304,15 +339,16 @@ string.h strlen() 计算字符串长度strcpy() 复制一个字符串到另一�
 
  对void指针强转时：
 
-　　struct NODE{} Node *next; 可以使用(Node\*)也可以使用(next);Node=\*next  ,   Node\*=next
+struct NODE{} Node *next; 可以使用(Node\*)也可以使用(next);Node=\*next  ,   Node\*=next
 
-malloc()函数属于stdlib.h头文件
 
 链表的反向，链接，插入，删除等操作
+* 二叉树
+* 图
 ***
 
 ### 第九章   网络套接字 ###
-
+http://www.cnblogs.com/Leo_wl/p/5665705.html
 ***
 
 ### 第十章   常见问题与算法总结 ###
@@ -392,3 +428,5 @@ http://www.cnblogs.com/afarmer/archive/2011/05/05/2038201.html
 > 内存地址怎么表示，指令分为操作码和操作数，操作数是由地址给出的，指令中的内存地址是什么
 >
 >内存地址实际上是一种偏移量，存储于段寄存器中。内存地址只是一种抽象，不是真正的物理内存地址，而是逻辑地址。由逻辑地址寻找到物理地址需要经过 逻辑地址->线性地址->物理地址 转换过程，而这些过程都是基于寄存器完成的。地址是16进制，关于计算机如何识别16进制，甚至关于内存地址更详细的知识，题主可以通过看相关书籍（比如CSAPP，操作系统相关的书籍，了解操作系统如何进行内存映射）进一步深入了解。
+
+- 进程库、进程间通信
