@@ -1,5 +1,6 @@
 ## C语言学习笔记 ##
 ***
+[第四章 流程控制](#4)
 ### 第一章   关键字 ###
 C语言共有32个关键字；关键字按作用可分为声明、定义变量和函数，表示不同数据类型，表单流程结构，指定存储级别；关键字不能用作标识符。
 
@@ -104,7 +105,7 @@ static 、auto 、external、register 使用例子
 * 优先级举例
 
 ***
-### 第四章   流程控制 ###
+<h3 id='4'>第四章   流程控制</h3>
 * 分支结构
 >if else
 >switch case default
@@ -152,6 +153,28 @@ static 、auto 、external、register 使用例子
 >数组名可不可以加或减呢？答案是可以 , 例如 int a[]={1,2,3}    int b=*(a+1);  问题：*（a-1）或者*（a+4）访问内存是否会出错？</br>
 
 * 结构体与指针
+>结构体定义的两种形式
+```c
+//一般形式
+struct st{
+  int a;
+  char b;
+} st1,st2;
+struct st st3;/*创建对象需要加上struct*/
+//使用typedef
+//结构体名不写在struct后面
+typedef struct{
+  int a;
+  char b;
+}st;
+st st1,*stp;/*创建对象和指针不需要struct，比较方便*/
+//链表结构体,包含上面两种形式
+typedef struct Node{
+    ElemType data;
+
+    struct Node *next; 
+} Node;
+```
 >结构体声明定义：注意，定义结构体时分号不能少</br>
 >结构体和数组不同，数组名表示数组首地址是一个指针，二结构体变量名代表结构体本身</br>
 >指向结构体的指针与结构体成员访问</br>
@@ -322,24 +345,530 @@ gcc -c add.c -o add.o
 
 ### 第八章   常见数据结构 ###
 >线性表顺序存储与数组有什么区别
->单链表、
+```c
+/*线性表功能的实现*/
+#include<stdio.h>
+
+//定义常量 存储空间的初始化分配
+#define MAXSIZE 20
+#define TRUE 1
+#define ERROR -1
+#define FALSE 0
+#define OK 1
+
+//用typedef定义类型
+typedef int Status;
+typedef int ElemType;
+//定义一个结构体类型
+typedef struct{
+    ElemType data[MAXSIZE];
+    int length;
+} SqList; 
+
+//初始化函数
+Status initList(SqList *L){
+    L->length = 0;
+    return OK; 
+} 
+
+//返回线性表的长度
+Status getListLength(SqList L){
+    return L.length;
+}
+
+//线性表为空返回true,否则返回false
+Status listEmpty(SqList L){
+    if(L.length == 0){
+        return TRUE; 
+    }
+    return FALSE;
+} 
+
+//线性表清空,长度为0 
+Status clearList(SqList *L){
+    L->length = 0; 
+    return OK;
+} 
+//获取指定的元素的值,返回下标为i - 1的元素,赋值给e
+Status getElem(SqList L, int i, ElemType *e){
+    //判断元素位置是否合法[i]
+    if(i > L.length || i < 1){
+        printf("查找的位置不正确 \n");
+        return ERROR; 
+    }
+    //判断线性表是否为空
+    if(listEmpty(L)){
+        return ERROR;
+    } 
+    *e = L.data[i - 1];
+    return OK;
+}
+
+//在线性表中查找指定的e相等的元素,如果查找成功,返回该元素的下标,否则返回ERROR
+Status locateElem(SqList L, ElemType e){
+    int i;
+    for(i = 0; i < L.length - 1; i++){
+        if(L.data[i] == e){
+            return i;
+        }
+    }
+    printf("没有查找到元素 %d 指定的下标\n",e);
+    return ERROR;
+} 
+
+//自动创建 MAXSIZE 个元素,并赋值为0 
+Status createList(SqList *L){
+    int i;
+    for(i = 0; i < 10; i++){
+        L->data[i] = 0;
+    } 
+    L->length = 10;
+    return OK;
+} 
+
+//在线性表中第i个位置前插入新元素e 
+Status listInsert(SqList *L, int i, ElemType e){
+    //判断长度是否可以允许插入新的数据 
+    if(L->length >= MAXSIZE){
+        printf("空间已满,不能再插入数据\n");
+        return FALSE; 
+    }
+    //判断插入位置的合法性
+    if(i < 1 || i > L->length) {
+        printf("插入位置不正确\n");
+        return FALSE;
+    }
+    int j;
+    for(j = L->length - 1; j >= i; j--){
+        L->data[j] = L->data[j - 1];
+    }
+    L->data[i - 1] = e;
+    L->length++;
+    return TRUE;
+}
+
+//删除线性表中第i个元素,成功后表长减1,用e返回其值 
+Status deleteList(SqList *L, int i, ElemType *e){
+    //判断线性表是否为空
+    if(listEmpty(*L)){
+        return ERROR;
+    }
+    //判断删除的位置是否合法
+    if(i < 1 || i > L->length) {
+        printf("删除位置不合法\n");
+        return ERROR;
+    }
+    *e = L->data[i - 1];
+    for(i; i < L->length; i++){
+        L->data[i - 1] = L->data[i];
+    }
+    L->length--;
+    return TRUE;
+} 
+
+//遍历线性表
+Status listTraverse(SqList L){
+    int i;
+    for(i = 0; i < L.length; i++){
+        printf("%d ",L.data[i]);
+    }
+    printf("\n");
+    return OK;
+} 
+```
+>单链表
+```c
+//单链表存储结构 
+#include<stdio.h>
+#include<stdlib.h>
+#define OK 1
+#define ERROR 0
+
+typedef int ElemType;
+typedef int Status;
+
+typedef struct Node{
+    ElemType data;
+
+    struct Node *next; 
+} Node;
+typedef struct Node *LinkList;
+
+//获取链表的长度 
+Status getListLength(LinkList L){
+    int i = 0; //计数器
+    while(L->next){
+        L = L->next;
+        i++;
+    } 
+    return i;
+}
+
+//单链表的读取,用e返回L中的第i个元素的值 , 0 < i < L.length
+Status getElem(LinkList L, int i, ElemType *e){ 
+    int j = 1;
+    LinkList p; 
+    p = L->next;    //p为第一个节点
+    while(p && j < i){ //p不为null 
+        p = p->next;
+        j++; 
+    }
+    if(!p || i > j){
+        return ERROR;   //查找的元素不存在 
+    }
+    *e = p->data;   //去第i个元素的数据
+    return OK; 
+} 
+
+//单链表的创建,随机产生n个随机数,建立带头结点的单链表(头插法) 
+Status createListHead(LinkList *L, int n){
+    LinkList p;
+    int i;
+    srand(time(0)); //初始化随机种子
+    *L = (LinkList)malloc(sizeof(Node)); //建立链表 
+    (*L)->next = NULL;  //定义一个头结点 
+    for(i = 0; i < n; i++){     //生成结点 
+        p = (LinkList)malloc(sizeof(Node));
+        p->data = rand() % 100 + 1; //产生100以内的数字 
+        p->next = (*L)->next;   
+        (*L)->next = p; //插入到表头     
+    }   
+    return OK;  
+}
+
+//单链表的创建,随机产生n个随机数,建立带头结点的单链表(未插法) 
+Status cretateListTail(LinkList *L, int n){
+    LinkList p, q;
+    int i;
+    srand(time(0));
+    *L = (LinkList)malloc(sizeof(Node));    //建立一个新的链表 
+    q = *L;
+    for(i = 0; i < n; i++){
+        p = (LinkList)malloc(sizeof(Node));//产生一个新的节点
+        p->data = rand() % 100 + 1; //产生一个100以内的数字 
+        q->next = p;    //新节点添加到链表的末尾 
+        q = p;      //新节点定义为未节点 
+    }
+    q->next = NULL; //链表的最后一个元素指向null
+    return OK; 
+} 
+
+//遍历单链表,输出值
+void listTraverse(LinkList L){
+    if(L->next == NULL){
+        printf("链表为空");
+    }else{
+        LinkList p;
+        p = L->next;
+        while(p != NULL){
+            printf("%d ",p->data);
+            p = p->next;
+        }
+        printf("\n");   
+    }
+}
+
+//链表的插入 将e插入到第i个位置之前 0 < i < listLenght + 1 
+//定位到第i个节点,生成一个新的节点,数据e保存在新的节点中,最后插入到链表中 
+Status listInsert(LinkList *L, int i, ElemType e) {
+    int j = 1;
+    LinkList p, s;
+    p = *L; 
+    while(p && j < i){ //p不为null 
+        p = p->next;
+        j++;
+    }
+    if(!p || i < j){    //查找失败
+        return ERROR;
+    }
+    s = (LinkList)malloc(sizeof(Node)); //生成一个新的节点
+    s->data = e;
+    s->next = p->next;  //插入新节点 
+    p->next = s; 
+    return OK;
+}
+
+//链表删除 从链表中删除第i个元素,将删除的元素保存到e中 
+Status ListDelete(LinkList *L, int i, ElemType *e){
+    int j = 1;
+    LinkList p, q; 
+    p = *L;
+    while(p && i > j){
+        p = p->next;
+        j++;
+    }
+    if(!p || j > i){
+        return ERROR;   //查找失败 
+    }
+    q = p->next;
+    *e = q->data;   //保存要删除的数据
+    p->next = q->next;  //将q的后继赋值给p的后继
+    free(q);    //释放空间 
+    return OK; 
+} 
+
+//删除所有的节点
+Status clearList(LinkList *L) {
+    LinkList p, q;
+    p = (*L)->next;
+    while(p){       //循环删除每一个节点 
+        q = p->next;
+        free(p);
+        p = q;
+    }
+    (*L)->next = NULL;  //头结点 
+    return OK;
+}
+```
 >双向链表
+```c
+```
 >循环链表
->二叉树、遍历
->栈
->队列
->串
->二维数组与矩阵
->哈希表
+```c
+```
+>树的相关概念</br>
+
+>节点的度：节点拥有的子树个数</br>
+>树的度：所有节点度的最大值</br>
+>根节点：没有双亲的节点，二叉树的双亲节点就是父节点的意思</br>
+>内部节点：度（子树个数）不为0，且有双亲的节点</br>
+>叶子节点：度为0的节点</br>
+>层次：根节点是第一层或第零层；根据具体问题而言</br>
+>树的高度：树中节点的最大层次,</br>
+>二叉数：每个节点最多有两个子树</br>
+>森林：n棵互不相交的树的集合</br>
+>树的存储结构：双亲表示法、孩子表示法、孩子兄弟表示法</br>
+>二叉树相关概念</br>
+>二叉树每个节点最多有两个子树</br>
+>子节点为叶子节点就认为没有子树</br>
+>斜树、左斜树、右斜树</br>
+>满二叉树和完全二叉树</br>
+>二叉树存储结构：顺序存储结构、二叉链表</br>
+>二叉树遍历：前序、中序、后序、层序遍历</br>
+```c
+/*
+    二叉树(binary tree) - 链式存储结构
+    实现 二叉树的创建和遍历
+    遍历和创建分为三种 前序,中序,后序 
+    输入 数据参考 <AB D  C  > 空格是要输入 的 
+*/
+
+#include<stdio.h>
+#include<stdlib.h>
+#define OK 1
+#define ERROR 0;
+
+typedef int Status;
+typedef char TElemType;
+
+//结点定义
+typedef struct BiTNode {
+    TElemType data;     //数据域 
+    struct BiTNode *lchild, *rchild;    //左右孩子指针 
+}BiTNode, *BiTree;
+
+//前序遍历(previous order traverse)
+void preOrderTraverse (BiTree T){
+    if(T == NULL){
+        return;
+    } 
+    printf("%c ", T->data);         //第一步 显示结点数据
+    preOrderTraverse(T->lchild);    //第二步 前序遍历左子树 
+    preOrderTraverse(T->rchild);        //第三步 前序遍历右子树 
+}
+
+//中序遍历(intermediate order traverse)
+void inOrderTraverse (BiTree T){
+    if(T == NULL){
+        return;
+    } 
+    inOrderTraverse(T->lchild); //第一步 中序遍历左子树 
+    printf("%c ", T->data);     //第二步 显示结点数据
+    inOrderTraverse(T->rchild); //第三步 中序遍历右子树 
+}
+
+//后序遍历(post order traverse)
+void postOrderTraverse(BiTree T){
+    if(T == NULL){
+        return;
+    }
+    postOrderTraverse(T->lchild);
+    postOrderTraverse(T->rchild);
+    printf("%c ", T->data);
+} 
+
+//二叉树的建立  按前序输入二叉树中结点的值 (一个字符)
+//' '表示空树 让每个结点确定是否有左右孩子,构造二叉链表表示二叉树 
+//如果输入顺序按中序或后序 , 代码的66 67 68行顺序要换一下 ,可以参照遍历的代码这里就不实现了. 
+void createBiTree(BiTree *T){
+    TElemType e;
+    scanf("%c",&e);
+    if(e == ' '){
+        *T = NULL;
+    } 
+    else{
+        *T = (BiTree)malloc(sizeof(BiTNode));   //生成结点 
+        if(!(*T)){  //创建失败 
+            printf("结点申请失败\n"); 
+            return; 
+        }
+        (*T)->data = e; //给结点赋值
+        createBiTree(&(*T)->lchild); //构造左子树
+        createBiTree(&(*T)->rchild);    //构造右子树 
+    } 
+}
+```
+>栈，栈可以有顺序和链式存储结构
+
+```c
+/*栈 顺序存储结构实现*/
+#include<stdio.h>
+
+//定义常量 存储空间的初始化分配
+#define MAXSIZE 20
+#define ERROR 0
+#define OK 1
+
+//用typedef定义类型
+typedef int Status;
+typedef int SElemType;
+//定义一个结构体类型
+typedef struct{
+    SElemType data[MAXSIZE];
+    int top;
+} SqStack; 
+
+//入栈 push, 将元素e为新的栈顶元素 
+Status push(SqStack *s, SElemType e){
+    // 判断栈是否满
+    if(s->top == MAXSIZE - 1){
+        return ERROR;
+    } 
+    s->top++;   //栈顶上移 
+    s->data[s->top] = e;    //将新元素复制到栈顶空间
+    return OK; 
+} 
+
+//出栈 pop 将要出栈的元素保存在e中 
+Status pop(SqStack *s, SElemType *e){
+    //判断栈是否为空 
+    if(s->top == -1){
+        return ERROR;
+    } 
+    *e = s->data[s->top];   //保存要出栈的元素 
+    s->top--;   //栈顶下移 
+    return OK; 
+} 
+
+//初始化
+Status initStack(SqStack *s){
+    s->top = -1;
+    return OK;
+} 
+
+//输出栈中的所有元素
+void stackTraverse(SqStack s) {
+    if(s.top == -1){
+        printf("栈中无元素\n");
+    }
+    else{
+        while(s.top != -1){
+            printf("%d ",s.data[s.top]);
+            s.top--;
+        } 
+        printf("\n");
+    }
+}
+```
+>队列</br>
+>串</br>
+>二维数组与矩阵</br>
+>哈希表与时间复杂度O(1)
+```c
+/*最常用的构造散列函数的方法是: 除留余数法
+F(key) = key mod P (P <= M)
+若散列表的长度是M, 通常p为小于或等于表长(最好接近于m)的最小质数,或不包含小于20质因子的合数.*/
+//hash表的生成和查找 
+//hash函数是 除留余数法
+//冲突采用 开放定址法 线性探测 
+#include<stdio.h>
+#include<stdlib.h> 
+
+#define ERROR 0
+#define OK 1
+#define HASHSIZE 12
+#define NULLKEY -32768  //初始化的默认值 
+#define arr_length(array) (sizeof(array) / (sizeof(array[0])))  //定义一个宏 求数组长度 
+
+typedef int Status; 
+typedef struct{
+    int *elem;  //数据元素的存储基址 
+    int count;  //当前数据元素的个数 
+} HashTable;
+
+int m = 0;  //散列表长度
+
+//初始化 散列表
+Status initHashTable(HashTable *H){
+    int i;
+    m = HASHSIZE;
+    H->count = m;
+    H->elem = (int *)malloc(m * sizeof(int));   //在堆中开辟空间 
+    for(i = 0; i < m; i++){
+        H->elem[i] = NULLKEY;   //初始化数据 
+    }
+    return OK;
+}
+
+//散列函数 计算散列地址 
+int hash(int key){
+    return key % m; //除留余数法 
+} 
+
+//插入关键字进散列表
+void insertHash(HashTable *H, int key){
+    int addr = hash(key);   //求散列地址
+    while(H->elem[addr] != NULLKEY){    //冲突产生了. 
+        addr = (addr + 1) % m;  //开放定址法 线性探测 
+    } 
+    H->elem[addr] = key;    //如果有空位插入关键字 
+} 
+
+//散列表查找关键字 用*addr返回 
+Status searchHash(HashTable H, int key, int *addr) {
+    *addr = hash(key);
+    while(H.elem[*addr] != key){    //有冲突,向下查找 
+        *addr = (*addr + 1) % m; 
+        if(H.elem[*addr] == NULLKEY || *addr == hash(key)){ //循环回到原点 说明关键字不存在 
+            printf("查找的关键字不存在\n");
+            return ERROR; 
+        }
+    }
+    return OK;
+}
+
+//遍历
+void traverse(HashTable H, int len) {
+    if(len <= 0){
+        printf("长度不合法\n");
+        return ;
+    } 
+    int i = 0;
+    for(i; i < len; i++){
+        printf("%d ", H.elem[i]);       
+    }
+    printf("\n");
+}
+```
 >图
 
-创建链表有多种方式，可以分为带头节点和不带头节点：http://www.cnblogs.com/plxx/p/3388098.html
+创建链表有多种方式，可以分为带头节点和不带头节点：http://www.cnblogs.com/plxx/p/3388098.html</br>
 
-链表带头节点的好处是：链表中第一个数据的操作和其他节点相同，空链表和非空链表的处理相同
+链表带头节点的好处是：链表中第一个数据的操作和其他节点相同，空链表和非空链表的处理相同</br>
 
- 对void指针强转时：
+ 对void指针强转时：</br>
 
-struct NODE{} Node *next; 可以使用(Node\*)也可以使用(next);Node=\*next  ,   Node\*=next
+struct NODE{} Node *next; 可以使用(Node\*)也可以使用(next);Node=\*next  ,   Node\*=next</br>
 
 
 链表的反向，链接，插入，删除等操作
@@ -348,7 +877,19 @@ struct NODE{} Node *next; 可以使用(Node\*)也可以使用(next);Node=\*next 
 ***
 
 ### 第九章   网络套接字 ###
-http://www.cnblogs.com/Leo_wl/p/5665705.html
+>主要的函数</br>
+>socket();bind();listen();connect();accept();read();write();close();</br>
+>各函数参数的意义</br>
+>一个简单的客户端、服务器代码示例</br>
+>Linux和windows下使用的函数的区别</br>
+>windows下如何编写和导入动态链接库；命令行使用-l参数链接库，或在工程中加入依赖库</br>
+>如何使服务端一直监听端口，接收请求</br>
+>fork多个线程去同时处理多个请求</br>
+>tcp的三次握手发生在哪个阶段</br>
+>tcp建立连接后数据的接收和发送路由都不变吗</br>
+http://www.cnblogs.com/Leo_wl/p/5665705.html</br>
+http://c.biancheng.net/cpp/socket/</br>
+http://blog.csdn.net/gneveek/article/details/8699198</br>
 ***
 
 ### 第十章   常见问题与算法总结 ###
@@ -430,3 +971,4 @@ http://www.cnblogs.com/afarmer/archive/2011/05/05/2038201.html
 >内存地址实际上是一种偏移量，存储于段寄存器中。内存地址只是一种抽象，不是真正的物理内存地址，而是逻辑地址。由逻辑地址寻找到物理地址需要经过 逻辑地址->线性地址->物理地址 转换过程，而这些过程都是基于寄存器完成的。地址是16进制，关于计算机如何识别16进制，甚至关于内存地址更详细的知识，题主可以通过看相关书籍（比如CSAPP，操作系统相关的书籍，了解操作系统如何进行内存映射）进一步深入了解。
 
 - 进程库、进程间通信
+- 本地进程的通信方式
