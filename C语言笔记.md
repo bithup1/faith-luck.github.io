@@ -1,6 +1,6 @@
 ## C语言学习笔记 ##
 ***
-[第四章 流程控制](#4)
+
 ### 第一章   关键字 ###
 C语言共有32个关键字；关键字按作用可分为声明、定义变量和函数，表示不同数据类型，表单流程结构，指定存储级别；关键字不能用作标识符。
 
@@ -258,16 +258,12 @@ C语言中的引用：用&声明，声明引用有什么用；与指针有什么
 * 手动编写makefile，CMake的使用
 ```c
 /* filename:add.h */
-extern int add(int i, int j);
-
- 
+extern int add(int i, int j); 
 /* filename:add.c */
 int add(int i, int j)
 {
   return i + j;
-};
-
- 
+}; 
 /* filename:main.c */
 #include "add.h"
 main()
@@ -278,8 +274,8 @@ main()
   printf("the sum of a+b is %d", add(a + b));
 };
 
-//怎样为上述三个文件产生makefile呢？如下：
-/**-------------------------
+/*怎样为上述三个文件产生makefile呢？如下：
+-------------------------
 test : main.o add.o
 gcc main.o add.o -o test
  
@@ -288,7 +284,7 @@ gcc -c main.c -o main.o
  
 add.o : add.c add.h
 gcc -c add.c -o add.o 
-**/-----------------------
+-----------------------*/
 //(注意分割符为TAB键）
 ```
 多文件编译https://my.oschina.net/u/3160411/blog/edit/draft/630161
